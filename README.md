@@ -1,6 +1,6 @@
 # Yer Altı Tarama — Tek Sayfa Site
 
-ASSUVA Proton Elic BRN-I KOP 4 ile yer altı tarama hizmeti için tanıtım ve fiyat hesaplama sayfası (Astro, statik).
+Proton Elic LB4S (Norton 3D yazılımlı) ile yer altı tarama hizmeti için tanıtım ve fiyat hesaplama sayfası (Astro, statik).
 
 - Geliştirme: `npm run dev`
 - Build: `npm run build` → `dist/`

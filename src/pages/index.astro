@@ -4,8 +4,9 @@ import iller from '../data/il-mesafe.json';
 import { CONTACT, PRICING } from '../config/site';
 import { tl } from '../lib/price';
 
-const title = `${CONTACT.BRAND} — Yer Altı Görüntüleme ve Tarama Hizmeti`;
-const description = `Kazı yapmadan yer altı boşluk ve metal anomali taraması. Mecidiyeköy merkezli, Türkiye'nin her iline geliyoruz. İstanbul içi ${tl(PRICING.BASE)}. Tel: ${CONTACT.PHONE_DISPLAY}`;
+const DEVICE = 'Proton Elic LB4S';
+const title = `${DEVICE} ile Yer Altı Tarama Hizmeti — ${CONTACT.BRAND}`;
+const description = `${DEVICE} ve Norton 3D yazılımıyla kazı yapmadan yer altı boşluk ve metal anomali taraması. Mecidiyeköy merkezli, Türkiye'nin her iline geliyoruz. İstanbul içi ${tl(PRICING.BASE)}. Tel: ${CONTACT.PHONE_DISPLAY}`;
 const waHref = `https://wa.me/${CONTACT.WHATSAPP}?text=${encodeURIComponent('Merhaba, yer altı tarama hizmeti hakkında bilgi almak istiyorum.')}`;
 
 // Arka planda süzülen dev il isimleri
@@ -13,25 +14,22 @@ const bgWords = ['İstanbul', 'Ankara', 'Trabzon', 'Antalya', 'Erzurum', 'İzmir
 const marquee = [...iller].sort((a, b) => a.km - b.km).map((r) => r.il);
 
 const sensorler = [
-  { kod: 'MAG', ad: 'Manyetik analog sensör', is: 'Yüksek hassasiyetli faz okuma ile metal ve boşluk izleri.' },
-  { kod: 'THM', ad: 'Dijital termal sensör', is: 'Yer altı sıcaklık farklarından tünel ve yapı boşlukları.' },
-  { kod: 'LDR', ad: 'LiDAR', is: 'Yüzey mesafe okuması ile noktasal hedef konumlandırma.' },
-  { kod: 'DPL', ad: 'Doppler radar', is: 'Yapısal yansıma ve hareket algılama.' },
+  { kod: 'THM', ad: '64 piksel termal sensör', is: '4×16 matris, 60° görüş açısı. Sıcaklık farklarından tünel, oda ve boşlukları ayırt eder.' },
+  { kod: 'MAG', ad: '4 sezyum manyetik multi-sensör', is: 'Manyetik alanı (faz) 4 noktada aynı anda ölçer; hızlı veri, net metal ve boşluk izi.' },
+  { kod: 'LDR', ad: 'LiDAR + lazer işaretleme', is: 'Zemin yüzeyini tanır, lazerle hedefin tam noktasını gösterir.' },
+  { kod: '3D', ad: 'Norton 3D görüntüleme yazılımı', is: 'Bluetooth ile bilgisayara aktarılır; metal kırmızı, boşluk mavi, zemin yeşil 3D görüntü.' },
 ];
 
 const galeri = [
-  { f: 'aci-ekran', t: 'Tarama ekranı', alt: 'Proton Elic KOP 4 açılı görünüm, ekranda tarama' },
-  { f: 'ekran-sinyal', t: 'Sinyal analizi', alt: 'Cihaz ekranında sensör sinyal grafiği' },
-  { f: 'sensor-ust', t: 'Sensör dizisi', alt: 'Üç sensör çubuğu üstten görünüm' },
-  { f: 'canta-set', t: 'Komple set', alt: 'Cihaz, sensörler ve taşıma çantası komple set' },
-  { f: 'sensor-on', t: 'Sensör uçları', alt: 'Sensör çubuklarının önden görünümü' },
-  { f: 'arka-baglanti', t: 'Bağlantılar', alt: 'Cihazın arka bağlantı paneli ve güç ünitesi' },
+  { f: 'canta-aci', t: 'Sahada kurulum', alt: 'Proton Elic LB4S sensör çubuklarıyla taşıma çantası üzerinde, çimenlik alanda' },
+  { f: 'yan-sensor', t: 'Sensör dizisi', alt: 'Proton Elic LB4S yandan görünüm, manyetik sensör çubukları' },
+  { f: 'sensor-yakin', t: 'Sensör ve bağlantılar', alt: 'Proton Elic LB4S sensörleri, güç ünitesi ve bağlantı kablosu yakın çekim' },
 ];
-
 const sss = [
   ['Bir tarama ne kadar sürer?', 'Alanın büyüklüğüne ve zemine göre değişir; tipik bir parsel taraması sahada 2–4 saat sürer. Kurulum ve ön değerlendirme bu süreye dahildir.'],
+  ['Hangi cihazı kullanıyorsunuz?', 'Proton Elic LB4S: 64 piksel termal sensör, 4 sezyum manyetik multi-sensör ve LiDAR bir arada. Veriler Norton 3D yazılımıyla görüntülenir; metal, boşluk ve zemin farklı renklerle ayrılır.'],
   ['Cihaz ne kadar derine iner?', 'Algılama derinliği zemin yapısına, nem oranına ve hedefin boyutuna bağlıdır. Sahada önce zemin kalibrasyonu yapar, o alan için gerçekçi derinlik aralığını size açıkça söyleriz.'],
-  ['Sonuçları nasıl alıyorum?', 'Tarama sırasında ekranda birlikte izlersiniz. Ardından tespit edilen anomali noktaları, koordinatları ve görüntüleriyle yazılı rapor teslim edilir.'],
+  ['Sonuçları nasıl alıyorum?', 'Tarama sırasında veriler Bluetooth ile bilgisayara aktarılır, Norton yazılımında 3D görüntüyü birlikte izlersiniz. Ardından tespit edilen anomali noktaları, koordinatları ve görüntüleriyle yazılı rapor teslim edilir.'],
   ['Ücrete neler dahil?', "Ekip, cihaz, Mecidiyeköy'den konumunuza gidiş-dönüş ve bir tarama oturumu. Hesaplayıcıdaki tutar dışında ek yol ücreti alınmaz."],
   ['Ödeme ve iptal nasıl?', 'Randevu kesinleşince kapora alınır, kalan tutar tarama günü ödenir. Yola çıkmadan 48 saat öncesine kadar yapılan iptallerde kapora iade edilir.'],
   ['Kazı da yapıyor musunuz?', 'Hayır. Yalnızca tahribatsız tarama ve görüntüleme hizmeti veriyoruz. Herhangi bir kazı, ilgili mevzuata ve resmi izinlere tabidir.'],
@@ -111,9 +109,9 @@ const phoneIcon = 'M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1
       <!-- HERO -->
       <section class="hero wrap">
         <div class="hero__copy">
-          <span class="pill"><span class="pill__dot"></span>Mecidiyeköy · Türkiye'nin 81 iline hizmet</span>
-          <h1>Toprağın altını <span class="grad">kazmadan</span> görün.</h1>
-          <p class="sub">4 sensörlü profesyonel görüntüleme sistemiyle arazinize geliyor; boşluk, tünel ve metal anomalilerini yerinde tarayıp aynı gün raporluyoruz.</p>
+          <span class="pill"><span class="pill__dot"></span>Norton 3D yazılımlı · Mecidiyeköy · 81 il</span>
+          <h1><span class="h1-device">{DEVICE}</span> ile toprağın altını <span class="grad">kazmadan</span> görün.</h1>
+          <p class="sub">Termal, manyetik ve LiDAR sensörlü {DEVICE} ile arazinize geliyor; boşluk, tünel ve metal anomalilerini yerinde tarayıp aynı gün raporluyoruz.</p>
           <div class="cta">
             <a class="btn btn--white" href="#fiyat">Fiyatını hesapla</a>
             <a class="btn btn--ghost" href={waHref} target="_blank" rel="noopener">
@@ -124,18 +122,18 @@ const phoneIcon = 'M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1
           <ul class="checks">
             <li>Kazı yok, tahribat yok — tamamen yüzeyden tarama</li>
             <li>İstanbul içi sabit {tl(PRICING.BASE)}, ulaşım dahil</li>
-            <li>Sonuçları sahada canlı izleyin, raporunuzu alın</li>
+            <li>Norton yazılımında 3D görüntüyü sahada birlikte izleyin</li>
           </ul>
         </div>
 
         <div class="device">
           <figure class="photo">
-            <img src={asset('img/kop4/on-ekran.webp')} width="768" height="1024" alt="ASSUVA Proton Elic BRN-I KOP 4 yer altı görüntüleme cihazı, dahili ekranında tüm sensörler açık" fetchpriority="high" />
-            <figcaption><span class="pill__dot"></span>Proton Elic BRN-I KOP 4</figcaption>
+            <img src={asset('img/lb4s/canta-aci.webp')} width="900" height="1200" alt="Proton Elic LB4S yer altı görüntüleme cihazı, sensör çubukları ve taşıma çantasıyla sahada" fetchpriority="high" />
+            <figcaption><span class="pill__dot"></span>{DEVICE} · Norton</figcaption>
           </figure>
           <div class="scan-card">
             <div class="device__top">
-              <span class="label">Canlı tarama</span>
+              <span class="label">Norton · canlı tarama</span>
               <span class="live"><i></i>Aktif</span>
             </div>
             <div class="radar">
@@ -148,7 +146,7 @@ const phoneIcon = 'M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1
             </div>
           </div>
           <div class="float float--a"><span class="label">Tespit</span><b id="cnt">0</b><small>anomali</small></div>
-          <div class="float float--b"><span class="label">Sensör</span><b>4</b><small>kanal füzyon</small></div>
+          <div class="float float--b"><span class="label">Termal</span><b>64 px</b><small>4×16 matris</small></div>
         </div>
       </section>
 
@@ -192,10 +190,10 @@ const phoneIcon = 'M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1
             <p>İnşaat öncesi parsel, eski temel, kuyu ve altyapı hattı gibi gizli unsurları önceden görün.</p>
           </article>
           <article class="cell cell--wide cell--photo glow">
-            <img src={asset('img/kop4/ekran-sinyal-sm.webp')} width="384" height="512" alt="" loading="lazy" />
+            <img src={asset('img/lb4s/sensor-yakin-sm.webp')} width="384" height="512" alt="" loading="lazy" />
             <span class="label">Rapor</span>
-            <h3>Sahada canlı, aynı gün yazılı</h3>
-            <p>Taramayı cihazın ekranında birlikte izlersiniz. Anomali noktaları koordinatları ve görüntüleriyle raporlanır.</p>
+            <h3>3D görüntü, aynı gün rapor</h3>
+            <p>Norton yazılımında 3D görüntüyü birlikte izlersiniz. Anomali noktaları koordinatları ve görüntüleriyle raporlanır.</p>
             <div class="bars" aria-hidden="true">{Array.from({ length: 18 }, (_, i) => <i style={`--h:${20 + Math.round(Math.abs(Math.sin(i * 1.7)) * 70)}%;--d:${i * 60}ms`}></i>)}</div>
           </article>
         </div>
@@ -205,22 +203,22 @@ const phoneIcon = 'M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1
       <section id="cihaz" class="section wrap">
         <div class="head">
           <span class="label">Ekipman</span>
-          <h2>ASSUVA <span class="grad">Proton Elic</span></h2>
-          <span class="pill model-pill"><span class="pill__dot"></span>Model: BRN-I KOP 4</span>
-          <p>Dört ayrı algılama teknolojisini tek gövdede toplayan, dahili büyük ekranlı profesyonel yer altı görüntüleme sistemi. Sahaya bu cihazla geliyoruz.</p>
+          <h2><span class="grad">Proton Elic LB4S</span></h2>
+          <span class="pill model-pill"><span class="pill__dot"></span>Norton 3D yazılımlı</span>
+          <p>Termal, manyetik ve LiDAR sensörlerini tek gövdede toplayan, verileri Bluetooth ile Norton 3D yazılımına aktaran yer altı görüntüleme sistemi. Sahaya bu cihazla geliyoruz.</p>
         </div>
         <div class="split">
           <div class="collage">
             <figure class="collage__main glow">
-              <img src={asset('img/kop4/aci-sol.webp')} width="768" height="1024" alt="Proton Elic KOP 4 cihazı taşıma çantası üzerinde, yandan görünüm" loading="lazy" />
+              <img src={asset('img/lb4s/yan-sensor.webp')} width="900" height="1200" alt="Proton Elic LB4S taşıma çantası üzerinde, yandan görünüm" loading="lazy" />
             </figure>
             <figure class="collage__side">
-              <img src={asset('img/kop4/sensor-cubuk-sm.webp')} width="384" height="512" alt="Cihazın karbon gövdeli manyetik sensör çubukları yakın çekim" loading="lazy" />
-              <figcaption>Manyetik sensör çubukları</figcaption>
+              <img src={asset('img/lb4s/canta-aci-sm.webp')} width="384" height="512" alt="Proton Elic LB4S taşıma çantasıyla sahada kurulu" loading="lazy" />
+              <figcaption>Sahada kurulum</figcaption>
             </figure>
             <figure class="collage__side collage__side--b">
-              <img src={asset('img/kop4/ekran-goruntu-sm.webp')} width="384" height="512" alt="Cihaz ekranında canlı tarama görüntüsü" loading="lazy" />
-              <figcaption>Dahili komut ekranı</figcaption>
+              <img src={asset('img/lb4s/sensor-yakin-sm.webp')} width="384" height="512" alt="Proton Elic LB4S sensörleri ve bağlantı kablosu yakın çekim" loading="lazy" />
+              <figcaption>Bluetooth + bağlantılar</figcaption>
             </figure>
           </div>
           <div>
@@ -242,12 +240,12 @@ const phoneIcon = 'M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1
         <div class="head wrap">
           <span class="label">Galeri</span>
           <h2>Cihazı <span class="grad">yakından</span> görün.</h2>
-          <p>Ekipmanımızın gerçek fotoğrafları. Büyütmek için dokunun.</p>
+          <p>{DEVICE} ekipmanımız. Büyütmek için dokunun.</p>
         </div>
         <div class="gallery" id="gallery">
           {galeri.map((g) => (
-            <button class="gallery__item" type="button" data-full={asset(`img/kop4/${g.f}.webp`)} data-alt={g.alt}>
-              <img src={asset(`img/kop4/${g.f}-sm.webp`)} width="384" height="512" alt={g.alt} loading="lazy" />
+            <button class="gallery__item" type="button" data-full={asset(`img/lb4s/${g.f}.webp`)} data-alt={g.alt}>
+              <img src={asset(`img/lb4s/${g.f}-sm.webp`)} width="384" height="512" alt={g.alt} loading="lazy" />
               <span>{g.t}</span>
             </button>
           ))}
@@ -525,6 +523,7 @@ const phoneIcon = 'M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1
   /* Hero */
   .hero { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr); gap: clamp(32px, 6vw, 80px); align-items: center; padding: clamp(56px, 9vw, 120px) 0 clamp(56px, 8vw, 100px); }
   h1 { margin: 24px 0 0; font-size: clamp(44px, 6.6vw, 84px); font-weight: 700; letter-spacing: -.045em; line-height: 1.02; }
+  .h1-device { display: block; margin-bottom: 6px; font-size: .62em; letter-spacing: -.03em; background: linear-gradient(135deg, #fff, rgba(255,255,255,.7)); -webkit-background-clip: text; background-clip: text; color: transparent; }
   .sub { margin: 22px 0 0; max-width: 54ch; color: var(--text-muted); font-size: clamp(16px, 1.5vw, 19px); }
   .cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 34px; }
   .cta--center { justify-content: center; }
