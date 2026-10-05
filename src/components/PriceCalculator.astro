@@ -19,10 +19,13 @@ const maxKm = Math.max(...iller.map((r) => r.km));
       <svg aria-hidden="true" viewBox="0 0 16 16"><path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" /></svg>
     </div>
 
-    <div class="route" aria-hidden="true">
-      <div class="route__ends"><span>Mecidiyeköy</span><span id="hedef">İstanbul</span></div>
-      <div class="route__rail"><i class="route__fill"></i><i class="route__dot"></i></div>
-      <div class="route__ends route__ends--dim"><span>0 km</span><span>{maxKm} km</span></div>
+    <div class="route">
+      <div class="route__ends" aria-hidden="true"><span>Mecidiyeköy</span><span id="hedef">İstanbul</span></div>
+      <div class="route__rail">
+        <i class="route__fill"></i><i class="route__dot"></i>
+        <input id="kmRange" class="route__input" type="range" min="0" max={maxKm} step="1" value="0" aria-label="Mesafeye göre il seç (sürükle)" />
+      </div>
+      <div class="route__ends route__ends--dim" aria-hidden="true"><span>0 km</span><span>{maxKm} km</span></div>
     </div>
 
     <ul class="rows">
@@ -34,7 +37,7 @@ const maxKm = Math.max(...iller.map((r) => r.km));
 
   <div class="calc__out" aria-live="polite">
     <span class="label">Tarama ücreti</span>
-    <output id="fiyat" for="il" class="price">{tl(PRICING.BASE)}</output>
+    <output id="ucret" for="il" class="price">{tl(PRICING.BASE)}</output>
     <span class="per">Tarama başı · gizli ücret yok</span>
     <div class="actions">
       <a id="wa" class="btn btn--white" href="#" target="_blank" rel="noopener">
@@ -55,9 +58,10 @@ const maxKm = Math.max(...iller.map((r) => r.km));
   const sel = root.querySelector<HTMLSelectElement>('#il')!;
   const kmEl = root.querySelector('#km')!;
   const formulEl = root.querySelector('#formul')!;
-  const fiyatEl = root.querySelector('#fiyat')!;
+  const fiyatEl = root.querySelector('#ucret')!;
   const hedefEl = root.querySelector('#hedef')!;
   const wa = root.querySelector<HTMLAnchorElement>('#wa')!;
+  const range = root.querySelector<HTMLInputElement>('#kmRange')!;
   const maxKm = Number(root.dataset.max);
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const num = (n: number) => new Intl.NumberFormat('tr-TR').format(n);
@@ -87,12 +91,31 @@ const maxKm = Math.max(...iller.map((r) => r.km));
     kmEl.textContent = kayit.km ? `≈ ${num(kayit.km)} km` : 'Şehir içi';
     formulEl.textContent = !kayit.km ? 'Sabit ücret' : tavan ? 'Üst sınır' : `${num(PRICING.BASE)} + ${num(kayit.km)} × ${PRICING.PER_KM}`;
     hedefEl.textContent = kayit.il;
-    root.style.setProperty('--p', String(kayit.km / maxKm));
+    if (!root.classList.contains('dragging')) root.style.setProperty('--p', String(kayit.km / maxKm));
+    if (!root.classList.contains('dragging')) range.value = String(kayit.km);
+    range.setAttribute('aria-valuetext', `${kayit.il}, ${kayit.km ? num(kayit.km) + ' km' : 'şehir içi'}, ${tl(fiyat)}`);
     sayac(fiyat);
 
     const mesaj = `Merhaba, ${kayit.il} için yer altı tarama randevusu almak istiyorum.\nMesafe: ${kayit.km ? `≈ ${num(kayit.km)} km` : 'İstanbul içi'}\nSitede görünen ücret: ${tl(fiyat)}\nKonum (ilçe/köy): \nTercih ettiğim tarih: `;
     wa.href = `https://wa.me/${root.dataset.wa}?text=${encodeURIComponent(mesaj)}`;
   }
+
+  // Kaydırıcı: sürükledikçe en yakın ile kilitlenir
+  function enYakin(km: number) {
+    let best = iller[0];
+    for (const r of iller) if (Math.abs(r.km - km) < Math.abs(best.km - km)) best = r;
+    return best;
+  }
+  range.addEventListener('input', () => {
+    root.classList.add('dragging');
+    const r = enYakin(Number(range.value));
+    root.style.setProperty('--p', String(Number(range.value) / maxKm));
+    if (sel.value !== r.il) { sel.value = r.il; guncelle(); }
+  });
+  range.addEventListener('change', () => {
+    root.classList.remove('dragging');
+    guncelle(); // il km'sine oturt
+  });
 
   sel.addEventListener('change', guncelle);
   guncelle();
@@ -128,10 +151,15 @@ const maxKm = Math.max(...iller.map((r) => r.km));
 
   .route { margin: 30px 0 26px; }
   .route__ends { display: flex; justify-content: space-between; font-size: 13px; font-weight: 600; }
+  .route__input { position: absolute; left: -10px; right: -10px; top: 50%; width: calc(100% + 20px); height: 36px; translate: 0 -50%; margin: 0; opacity: 0; cursor: grab; touch-action: none; }
+  .route__input:active { cursor: grabbing; }
+  .route__input:focus-visible ~ .route__dot, .route__rail:has(.route__input:focus-visible) .route__dot { outline: 2px solid var(--accent); outline-offset: 4px; }
+  .route__rail:hover .route__dot { transform: scale(1.2); }
+  .dragging .route__fill, .dragging .route__dot { transition: none; }
   .route__ends--dim { font-size: 12px; font-weight: 500; color: var(--text-dim); }
-  .route__rail { position: relative; height: 6px; margin: 10px 0; border-radius: 99px; background: rgba(255,255,255,.07); }
+  .route__rail { position: relative; height: 6px; margin: 16px 0; border-radius: 99px; background: rgba(255,255,255,.07); }
   .route__fill { position: absolute; inset: 0 auto 0 0; width: calc(var(--p) * 100%); border-radius: inherit; background: linear-gradient(90deg, var(--accent), var(--accent-2)); transition: width .7s cubic-bezier(.2,.8,.2,1); }
-  .route__dot { position: absolute; top: 50%; left: calc(var(--p) * 100%); width: 16px; height: 16px; translate: -50% -50%; border-radius: 50%; background: #fff; box-shadow: 0 0 0 5px rgba(79,209,197,.25), 0 0 24px rgba(79,209,197,.6); transition: left .7s cubic-bezier(.2,.8,.2,1); }
+  .route__dot { position: absolute; top: 50%; left: calc(var(--p) * 100%); width: 16px; height: 16px; translate: -50% -50%; border-radius: 50%; background: #fff; box-shadow: 0 0 0 5px rgba(79,209,197,.25), 0 0 24px rgba(79,209,197,.6); transition: left .7s cubic-bezier(.2,.8,.2,1), transform .2s; }
 
   .rows { list-style: none; margin: 0; padding: 0; }
   .rows li { display: flex; justify-content: space-between; gap: 16px; padding: 13px 0; border-top: 1px solid var(--border); font-size: 15px; }
