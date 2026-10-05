@@ -1,0 +1,725 @@
+---
+import PriceCalculator from '../components/PriceCalculator.astro';
+import iller from '../data/il-mesafe.json';
+import { CONTACT, PRICING } from '../config/site';
+import { tl } from '../lib/price';
+
+const title = `${CONTACT.BRAND} — Yer Altı Görüntüleme ve Tarama Hizmeti`;
+const description = `Kazı yapmadan yer altı boşluk ve metal anomali taraması. Mecidiyeköy merkezli, Türkiye'nin her iline geliyoruz. İstanbul içi ${tl(PRICING.BASE)}. Tel: ${CONTACT.PHONE_DISPLAY}`;
+const waHref = `https://wa.me/${CONTACT.WHATSAPP}?text=${encodeURIComponent('Merhaba, yer altı tarama hizmeti hakkında bilgi almak istiyorum.')}`;
+
+// Arka planda süzülen dev il isimleri
+const bgWords = ['İstanbul', 'Ankara', 'Trabzon', 'Antalya', 'Erzurum', 'İzmir', 'Konya', 'Diyarbakır', 'Samsun', 'Van', 'Bursa', 'Hakkari'];
+const marquee = [...iller].sort((a, b) => a.km - b.km).map((r) => r.il);
+
+const sensorler = [
+  { kod: 'MAG', ad: 'Manyetik analog sensör', is: 'Yüksek hassasiyetli faz okuma ile metal ve boşluk izleri.' },
+  { kod: 'THM', ad: 'Dijital termal sensör', is: 'Yer altı sıcaklık farklarından tünel ve yapı boşlukları.' },
+  { kod: 'LDR', ad: 'LiDAR', is: 'Yüzey mesafe okuması ile noktasal hedef konumlandırma.' },
+  { kod: 'DPL', ad: 'Doppler radar', is: 'Yapısal yansıma ve hareket algılama.' },
+];
+
+const galeri = [
+  { f: 'aci-ekran', t: 'Tarama ekranı', alt: 'Proton Elic KOP 4 açılı görünüm, ekranda tarama' },
+  { f: 'ekran-sinyal', t: 'Sinyal analizi', alt: 'Cihaz ekranında sensör sinyal grafiği' },
+  { f: 'sensor-ust', t: 'Sensör dizisi', alt: 'Üç sensör çubuğu üstten görünüm' },
+  { f: 'canta-set', t: 'Komple set', alt: 'Cihaz, sensörler ve taşıma çantası komple set' },
+  { f: 'sensor-on', t: 'Sensör uçları', alt: 'Sensör çubuklarının önden görünümü' },
+  { f: 'arka-baglanti', t: 'Bağlantılar', alt: 'Cihazın arka bağlantı paneli ve güç ünitesi' },
+];
+
+const sss = [
+  ['Bir tarama ne kadar sürer?', 'Alanın büyüklüğüne ve zemine göre değişir; tipik bir parsel taraması sahada 2–4 saat sürer. Kurulum ve ön değerlendirme bu süreye dahildir.'],
+  ['Cihaz ne kadar derine iner?', 'Algılama derinliği zemin yapısına, nem oranına ve hedefin boyutuna bağlıdır. Sahada önce zemin kalibrasyonu yapar, o alan için gerçekçi derinlik aralığını size açıkça söyleriz.'],
+  ['Sonuçları nasıl alıyorum?', 'Tarama sırasında ekranda birlikte izlersiniz. Ardından tespit edilen anomali noktaları, koordinatları ve görüntüleriyle yazılı rapor teslim edilir.'],
+  ['Ücrete neler dahil?', "Ekip, cihaz, Mecidiyeköy'den konumunuza gidiş-dönüş ve bir tarama oturumu. Hesaplayıcıdaki tutar dışında ek yol ücreti alınmaz."],
+  ['Ödeme ve iptal nasıl?', 'Randevu kesinleşince kapora alınır, kalan tutar tarama günü ödenir. Yola çıkmadan 48 saat öncesine kadar yapılan iptallerde kapora iade edilir.'],
+  ['Kazı da yapıyor musunuz?', 'Hayır. Yalnızca tahribatsız tarama ve görüntüleme hizmeti veriyoruz. Herhangi bir kazı, ilgili mevzuata ve resmi izinlere tabidir.'],
+];
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  name: 'Yer Altı Görüntüleme ve Tarama',
+  serviceType: 'Yer altı boşluk ve metal anomali taraması',
+  areaServed: { '@type': 'Country', name: 'Türkiye' },
+  provider: {
+    '@type': 'LocalBusiness',
+    name: CONTACT.BRAND,
+    telephone: CONTACT.PHONE_TEL,
+    address: { '@type': 'PostalAddress', addressLocality: 'Şişli', addressRegion: 'İstanbul', addressCountry: 'TR', streetAddress: 'Mecidiyeköy' },
+  },
+  offers: { '@type': 'AggregateOffer', priceCurrency: 'TRY', lowPrice: PRICING.BASE, highPrice: PRICING.CAP },
+};
+
+const asset = (path: string) => `${import.meta.env.BASE_URL.replace(/\/$/, '')}/${path}`;
+
+const waIcon = 'M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.1-4.5-3.9-4.7-4.1-.1-.2-1.1-1.5-1.1-2.8s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .5l-.4.6-.4.4c-.1.2-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.4 2.4 1.5.3.1.5.1.6-.1l.9-1c.2-.3.4-.2.6-.1l1.9.9c.3.1.5.2.5.3.1.2.1.7-.1 1.2Z';
+const phoneIcon = 'M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1A17 17 0 0 1 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1l-2.3 2.2Z';
+---
+
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#0B0E1A" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="tr_TR" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <link rel="icon" href={asset('favicon.svg')} type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+  </head>
+  <body>
+    <!-- Arka plan: gradyan ışıklar + süzülen il isimleri -->
+    <div class="bg" aria-hidden="true">
+      <div class="bg__glow bg__glow--a"></div>
+      <div class="bg__glow bg__glow--b"></div>
+      <div class="bg__glow bg__glow--c"></div>
+      <div class="bg__words">
+        {bgWords.map((w, i) => <span style={`--i:${i};--x:${((i * 37) % 70) - 6}%`}>{w}</span>)}
+      </div>
+    </div>
+
+    <header class="nav">
+      <div class="wrap nav__in">
+        <a href="#" class="brand">
+          <svg class="brand__logo" viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4FD1C5"/><stop offset="1" stop-color="#6C8CFF"/></linearGradient></defs><circle cx="16" cy="16" r="13" fill="none" stroke="url(#lg)" stroke-width="2"/><circle cx="16" cy="16" r="7.5" fill="none" stroke="url(#lg)" stroke-width="1.5" opacity=".6"/><path d="M16 16 L27 9" stroke="#fff" stroke-width="2" stroke-linecap="round"/><circle cx="21" cy="20" r="2.2" fill="#4FD1C5"/></svg>
+          {CONTACT.BRAND}
+        </a>
+        <nav class="nav__links" aria-label="Ana menü">
+          <a href="#hizmet">Hizmet</a>
+          <a href="#cihaz">Cihaz</a>
+          <a href="#galeri">Galeri</a>
+          <a href="#fiyat">Fiyat</a>
+          <a href="#sss">SSS</a>
+        </nav>
+        <a class="btn btn--white btn--sm" href={`tel:${CONTACT.PHONE_TEL}`}>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d={phoneIcon} /></svg>
+          {CONTACT.PHONE_DISPLAY}
+        </a>
+      </div>
+    </header>
+
+    <main>
+      <!-- HERO -->
+      <section class="hero wrap">
+        <div class="hero__copy">
+          <span class="pill"><span class="pill__dot"></span>Mecidiyeköy · Türkiye'nin 81 iline hizmet</span>
+          <h1>Toprağın altını <span class="grad">kazmadan</span> görün.</h1>
+          <p class="sub">4 sensörlü profesyonel görüntüleme sistemiyle arazinize geliyor; boşluk, tünel ve metal anomalilerini yerinde tarayıp aynı gün raporluyoruz.</p>
+          <div class="cta">
+            <a class="btn btn--white" href="#fiyat">Fiyatını hesapla</a>
+            <a class="btn btn--ghost" href={waHref} target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d={waIcon} /></svg>
+              WhatsApp'tan yaz
+            </a>
+          </div>
+          <ul class="checks">
+            <li>Kazı yok, tahribat yok — tamamen yüzeyden tarama</li>
+            <li>İstanbul içi sabit {tl(PRICING.BASE)}, ulaşım dahil</li>
+            <li>Sonuçları sahada canlı izleyin, raporunuzu alın</li>
+          </ul>
+        </div>
+
+        <div class="device">
+          <figure class="photo">
+            <img src={asset('img/kop4/on-ekran.webp')} width="768" height="1024" alt="ASSUVA Proton Elic BRN-I KOP 4 yer altı görüntüleme cihazı, dahili ekranında tüm sensörler açık" fetchpriority="high" />
+            <figcaption><span class="pill__dot"></span>Proton Elic BRN-I KOP 4</figcaption>
+          </figure>
+          <div class="scan-card">
+            <div class="device__top">
+              <span class="label">Canlı tarama</span>
+              <span class="live"><i></i>Aktif</span>
+            </div>
+            <div class="radar">
+              <canvas id="radar" role="img" aria-label="Animasyonlu yer altı tarama görüntüsü"></canvas>
+            </div>
+            <div class="device__legend">
+              <span><i class="sw sw--metal"></i>Metal</span>
+              <span><i class="sw sw--void"></i>Boşluk</span>
+              <span><i class="sw sw--soil"></i>Zemin</span>
+            </div>
+          </div>
+          <div class="float float--a"><span class="label">Tespit</span><b id="cnt">0</b><small>anomali</small></div>
+          <div class="float float--b"><span class="label">Sensör</span><b>4</b><small>kanal füzyon</small></div>
+        </div>
+      </section>
+
+      <!-- MARQUEE: il isimleri -->
+      <section class="marquee-section" aria-label="Hizmet verilen iller">
+        <div class="marquee">
+          {[0, 1].map((k) => (
+            <div class="marquee__track" aria-hidden={k === 1 ? 'true' : undefined}>
+              {marquee.map((il) => <span>{il}</span>)}
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <!-- BENTO: hizmet -->
+      <section id="hizmet" class="section wrap">
+        <div class="head">
+          <span class="label">Hizmet</span>
+          <h2>Ne arıyorsanız, önce <span class="grad">görün</span>.</h2>
+          <p>Toprağı kazmadan önce altında ne olduğunu bilin. Zaman, para ve emek kaybını baştan önleyin.</p>
+        </div>
+        <div class="bento">
+          <article class="cell cell--big glow">
+            <span class="label">Kapsama</span>
+            <span class="bignum">81 il</span>
+            <p>Mecidiyeköy'den çıkıyor, Edirne'den Hakkari'ye Türkiye'nin her noktasına geliyoruz.</p>
+          </article>
+          <article class="cell glow">
+            <div class="icon"><svg viewBox="0 0 24 24"><ellipse cx="12" cy="12" rx="9" ry="5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-dasharray="3 3"/></svg></div>
+            <h3>Boşluk ve tünel tespiti</h3>
+            <p>Termal ve manyetik veriyi birleştirerek oda, galeri, tünel ve dolgu farklılıklarını işaretleriz.</p>
+          </article>
+          <article class="cell glow">
+            <div class="icon"><svg viewBox="0 0 24 24"><rect x="7" y="7" width="10" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></div>
+            <h3>Metal anomali taraması</h3>
+            <p>Demirli ve demirsiz metal kütlelerini konum ve yoğunluk olarak ayırt eder, koordinatlı raporlarız.</p>
+          </article>
+          <article class="cell glow">
+            <div class="icon"><svg viewBox="0 0 24 24"><path d="M3 20h18M5 20V9l7-5 7 5v11" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg></div>
+            <h3>Yapı ve zemin kontrolü</h3>
+            <p>İnşaat öncesi parsel, eski temel, kuyu ve altyapı hattı gibi gizli unsurları önceden görün.</p>
+          </article>
+          <article class="cell cell--wide cell--photo glow">
+            <img src={asset('img/kop4/ekran-sinyal-sm.webp')} width="384" height="512" alt="" loading="lazy" />
+            <span class="label">Rapor</span>
+            <h3>Sahada canlı, aynı gün yazılı</h3>
+            <p>Taramayı cihazın ekranında birlikte izlersiniz. Anomali noktaları koordinatları ve görüntüleriyle raporlanır.</p>
+            <div class="bars" aria-hidden="true">{Array.from({ length: 18 }, (_, i) => <i style={`--h:${20 + Math.round(Math.abs(Math.sin(i * 1.7)) * 70)}%;--d:${i * 60}ms`}></i>)}</div>
+          </article>
+        </div>
+      </section>
+
+      <!-- CİHAZ -->
+      <section id="cihaz" class="section wrap">
+        <div class="head">
+          <span class="label">Ekipman</span>
+          <h2>ASSUVA <span class="grad">Proton Elic</span></h2>
+          <span class="pill model-pill"><span class="pill__dot"></span>Model: BRN-I KOP 4</span>
+          <p>Dört ayrı algılama teknolojisini tek gövdede toplayan, dahili büyük ekranlı profesyonel yer altı görüntüleme sistemi. Sahaya bu cihazla geliyoruz.</p>
+        </div>
+        <div class="split">
+          <div class="collage">
+            <figure class="collage__main glow">
+              <img src={asset('img/kop4/aci-sol.webp')} width="768" height="1024" alt="Proton Elic KOP 4 cihazı taşıma çantası üzerinde, yandan görünüm" loading="lazy" />
+            </figure>
+            <figure class="collage__side">
+              <img src={asset('img/kop4/sensor-cubuk-sm.webp')} width="384" height="512" alt="Cihazın karbon gövdeli manyetik sensör çubukları yakın çekim" loading="lazy" />
+              <figcaption>Manyetik sensör çubukları</figcaption>
+            </figure>
+            <figure class="collage__side collage__side--b">
+              <img src={asset('img/kop4/ekran-goruntu-sm.webp')} width="384" height="512" alt="Cihaz ekranında canlı tarama görüntüsü" loading="lazy" />
+              <figcaption>Dahili komut ekranı</figcaption>
+            </figure>
+          </div>
+          <div>
+            <ul class="sensors">
+              {sensorler.map((s) => (
+                <li class="glow">
+                  <span class="tag">{s.kod}</span>
+                  <div><h3>{s.ad}</h3><p>{s.is}</p></div>
+                </li>
+              ))}
+            </ul>
+            <p class="note">Algılama derinliği zemin yapısı, nem ve hedef boyutuna göre değişir. Her taramadan önce zemin kalibrasyonu yapılır.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- GALERİ -->
+      <section id="galeri" class="section">
+        <div class="head wrap">
+          <span class="label">Galeri</span>
+          <h2>Cihazı <span class="grad">yakından</span> görün.</h2>
+          <p>Ekipmanımızın gerçek fotoğrafları. Büyütmek için dokunun.</p>
+        </div>
+        <div class="gallery" id="gallery">
+          {galeri.map((g) => (
+            <button class="gallery__item" type="button" data-full={asset(`img/kop4/${g.f}.webp`)} data-alt={g.alt}>
+              <img src={asset(`img/kop4/${g.f}-sm.webp`)} width="384" height="512" alt={g.alt} loading="lazy" />
+              <span>{g.t}</span>
+            </button>
+          ))}
+        </div>
+        <dialog class="lightbox" id="lightbox" aria-label="Fotoğraf görüntüleyici">
+          <img id="lbImg" src="" alt="" />
+          <button class="lightbox__close" type="button" aria-label="Kapat">✕</button>
+        </dialog>
+      </section>
+
+      <!-- FİYAT -->
+      <section id="fiyat" class="section wrap">
+        <div class="head">
+          <span class="label">Şeffaf fiyat</span>
+          <h2>İlini seç, fiyatı <span class="grad">hemen</span> gör.</h2>
+          <p>İstanbul içi sabit {tl(PRICING.BASE)}. Diğer illerde Mecidiyeköy'den karayolu mesafesine göre hesaplanır, en fazla {tl(PRICING.CAP)}.</p>
+        </div>
+        <PriceCalculator />
+      </section>
+
+      <!-- SÜREÇ -->
+      <section class="section wrap">
+        <div class="head">
+          <span class="label">Nasıl çalışır</span>
+          <h2>Üç adımda <span class="grad">sahadayız</span>.</h2>
+        </div>
+        <ol class="steps">
+          <li class="glow"><span class="step-n">1</span><h3>Fiyatını gör</h3><p>Hesaplayıcıdan ilini seç, ücreti anında öğren.</p></li>
+          <li class="glow"><span class="step-n">2</span><h3>WhatsApp'tan yaz</h3><p>Konum ve tarih bilgisini paylaş, randevunu kesinleştirelim.</p></li>
+          <li class="glow"><span class="step-n">3</span><h3>Ekip konumuna gelsin</h3><p>Taramayı birlikte izle, raporunu aynı gün al.</p></li>
+        </ol>
+      </section>
+
+      <!-- SSS -->
+      <section id="sss" class="section wrap faq">
+        <div class="head head--left">
+          <span class="label">SSS</span>
+          <h2>Sık sorulanlar</h2>
+          <p>Aradığınız cevap yoksa <a href={`tel:${CONTACT.PHONE_TEL}`}>{CONTACT.PHONE_DISPLAY}</a> numarasından bize ulaşın.</p>
+        </div>
+        <div class="faq__list">
+          {sss.map(([q, a]) => (
+            <details>
+              <summary>{q}<span class="chev" aria-hidden="true"></span></summary>
+              <p>{a}</p>
+            </details>
+          ))}
+        </div>
+      </section>
+
+      <!-- CTA -->
+      <section class="section wrap">
+        <div class="final glow">
+          <span class="pill"><span class="pill__dot"></span>7/24 WhatsApp</span>
+          <h2>Arazinizin altında <span class="grad">ne var</span>?</h2>
+          <p>Hemen arayın ya da yazın, uygun tarihe randevunuzu oluşturalım.</p>
+          <div class="cta cta--center">
+            <a class="btn btn--white" href={`tel:${CONTACT.PHONE_TEL}`}>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d={phoneIcon} /></svg>
+              {CONTACT.PHONE_DISPLAY}
+            </a>
+            <a class="btn btn--ghost" href={waHref} target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d={waIcon} /></svg>
+              WhatsApp'tan yaz
+            </a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer wrap">
+      <div class="footer__top">
+        <div>
+          <a href="#" class="brand">{CONTACT.BRAND}</a>
+          <p>{CONTACT.ADDRESS}</p>
+          <p><a href={`tel:${CONTACT.PHONE_TEL}`}>{CONTACT.PHONE_DISPLAY}</a> · <a href={waHref} target="_blank" rel="noopener">WhatsApp</a></p>
+        </div>
+        <p class="legal">Yalnızca tahribatsız tarama ve görüntüleme hizmeti verilir; kazı yapılmaz ve teşvik edilmez. 2863 sayılı Kültür ve Tabiat Varlıklarını Koruma Kanunu kapsamındaki alanlarda izinsiz arama ve kazı suçtur. Tarama sonuçları teknik yorumdur, kesin sonuç garantisi verilmez. Fiyatlar tarama başıdır; mesafeler il merkezine yaklaşık karayolu değeridir.</p>
+      </div>
+      <p class="copy">© {new Date().getFullYear()} {CONTACT.BRAND}. Tüm hakları saklıdır.</p>
+    </footer>
+
+    <div class="cursor" aria-hidden="true"><i class="cursor__ring"></i><i class="cursor__dot"></i></div>
+
+    <a class="fab" href={waHref} target="_blank" rel="noopener" aria-label="WhatsApp'tan yaz">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d={waIcon} /></svg>
+    </a>
+
+    <script>
+      const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      // Kartlarda fareyi takip eden parlama
+      document.querySelectorAll<HTMLElement>('.glow').forEach((el) => {
+        el.addEventListener('pointermove', (e) => {
+          const r = el.getBoundingClientRect();
+          el.style.setProperty('--mx', `${e.clientX - r.left}px`);
+          el.style.setProperty('--my', `${e.clientY - r.top}px`);
+        });
+      });
+
+      // Arka plan kelimeleri scroll ile yatay kayar
+      const words = [...document.querySelectorAll<HTMLElement>('.bg__words span')];
+      if (!reduce) {
+        let ticking = false;
+        const move = () => {
+          const y = scrollY;
+          words.forEach((w, i) => {
+            const dir = i % 2 ? -1 : 1;
+            w.style.transform = `translate3d(${dir * y * (0.08 + (i % 4) * 0.03)}px, ${-y * 0.25}px, 0)`;
+          });
+          ticking = false;
+        };
+        addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(move); } }, { passive: true });
+        move();
+      }
+
+      // Scroll'da beliren öğeler
+      const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { threshold: 0.12 });
+      document.querySelectorAll('.head, .cell, .sensors li, .steps li, .calc, .final, .collage, .gallery').forEach((el) => { el.classList.add('reveal'); io.observe(el); });
+
+      // Fareyi takip eden nokta + halka + arka plan ışığı
+      if (matchMedia('(hover: hover) and (pointer: fine)').matches) {
+        const root = document.documentElement;
+        const dot = document.querySelector<HTMLElement>('.cursor__dot')!;
+        const ring = document.querySelector<HTMLElement>('.cursor__ring')!;
+        let mx = innerWidth / 2, my = innerHeight / 2, rx = mx, ry = my;
+        root.classList.add('has-cursor');
+        addEventListener('pointermove', (e) => {
+          mx = e.clientX; my = e.clientY;
+          dot.style.transform = `translate3d(${mx}px, ${my}px, 0)`;
+          root.style.setProperty('--gx', `${mx}px`);
+          root.style.setProperty('--gy', `${my}px`);
+          root.classList.add('cursor-on');
+          const t = e.target as Element;
+          root.classList.toggle('cursor-hover', !!t.closest('a, button, select, summary, .glow, .gallery__item'));
+        }, { passive: true });
+        document.addEventListener('pointerleave', () => root.classList.remove('cursor-on'));
+        addEventListener('pointerdown', () => root.classList.add('cursor-down'));
+        addEventListener('pointerup', () => root.classList.remove('cursor-down'));
+        const follow = () => {
+          const k = reduce ? 1 : 0.16;
+          rx += (mx - rx) * k; ry += (my - ry) * k;
+          ring.style.transform = `translate3d(${rx}px, ${ry}px, 0)`;
+          requestAnimationFrame(follow);
+        };
+        follow();
+      }
+
+      // Galeri büyütme
+      const lb = document.getElementById('lightbox') as HTMLDialogElement;
+      const lbImg = document.getElementById('lbImg') as HTMLImageElement;
+      document.querySelectorAll<HTMLButtonElement>('.gallery__item').forEach((b) => b.addEventListener('click', () => {
+        lbImg.src = b.dataset.full!; lbImg.alt = b.dataset.alt!; lb.showModal();
+      }));
+      lb.addEventListener('click', () => lb.close());
+
+      // Radar
+      const cv = document.getElementById('radar') as HTMLCanvasElement;
+      const cnt = document.getElementById('cnt')!;
+      const ctx = cv.getContext('2d')!;
+      let W = 0, H = 0;
+      const fit = () => {
+        const r = cv.getBoundingClientRect(), d = Math.min(2, devicePixelRatio || 1);
+        W = r.width; H = r.height; cv.width = W * d; cv.height = H * d; ctx.setTransform(d, 0, 0, d, 0, 0);
+      };
+      fit();
+      addEventListener('resize', fit);
+
+      type Blip = { a: number; r: number; t: 0 | 1 | 2; e: number };
+      const blips: Blip[] = [
+        { a: 0.5, r: 0.58, t: 0, e: 0 }, { a: 1.6, r: 0.34, t: 1, e: 0 }, { a: 2.5, r: 0.8, t: 2, e: 0 },
+        { a: 3.4, r: 0.5, t: 0, e: 0 }, { a: 4.3, r: 0.7, t: 1, e: 0 }, { a: 5.4, r: 0.4, t: 0, e: 0 },
+      ];
+      const COL = ['#F87171', '#6C8CFF', '#10B981'];
+      let ang = 0, prev = performance.now(), found = 0, visible = true;
+      new IntersectionObserver(([e]) => (visible = e.isIntersecting)).observe(cv);
+
+      function draw(now: number) {
+        const dt = Math.min(0.05, (now - prev) / 1000); prev = now;
+        const cx = W / 2, cy = H / 2, R = Math.min(W, H) / 2 - 6;
+        const last = ang; ang = (ang + dt * 1.05) % (Math.PI * 2);
+        ctx.clearRect(0, 0, W, H);
+
+        ctx.strokeStyle = 'rgba(255,255,255,.07)'; ctx.lineWidth = 1;
+        for (let i = 1; i <= 4; i++) { ctx.beginPath(); ctx.arc(cx, cy, (R * i) / 4, 0, Math.PI * 2); ctx.stroke(); }
+        ctx.beginPath(); ctx.moveTo(cx - R, cy); ctx.lineTo(cx + R, cy); ctx.moveTo(cx, cy - R); ctx.lineTo(cx, cy + R); ctx.stroke();
+
+        // Süpürme konisi
+        if ('createConicGradient' in ctx) {
+          const g = ctx.createConicGradient(ang - 0.9, cx, cy);
+          g.addColorStop(0, 'rgba(79,209,197,0)');
+          g.addColorStop(0.143, 'rgba(79,209,197,.28)');
+          g.addColorStop(0.1433, 'rgba(79,209,197,0)');
+          ctx.fillStyle = g; ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2); ctx.fill();
+        }
+        ctx.strokeStyle = 'rgba(79,209,197,.9)'; ctx.lineWidth = 1.5;
+        ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + Math.cos(ang) * R, cy + Math.sin(ang) * R); ctx.stroke();
+
+        for (const b of blips) {
+          const hit = last <= ang ? b.a > last && b.a <= ang : b.a > last || b.a <= ang;
+          if (hit) { b.e = 1; found++; cnt.textContent = String(found); }
+          b.e = Math.max(0, b.e - dt * 0.32);
+          if (!b.e) continue;
+          const x = cx + Math.cos(b.a) * R * b.r, y = cy + Math.sin(b.a) * R * b.r;
+          const rg = ctx.createRadialGradient(x, y, 0, x, y, 22);
+          rg.addColorStop(0, COL[b.t]); rg.addColorStop(1, 'transparent');
+          ctx.globalAlpha = b.e * 0.55; ctx.fillStyle = rg; ctx.beginPath(); ctx.arc(x, y, 22, 0, Math.PI * 2); ctx.fill();
+          ctx.globalAlpha = b.e; ctx.fillStyle = COL[b.t]; ctx.beginPath(); ctx.arc(x, y, 4, 0, Math.PI * 2); ctx.fill();
+          ctx.globalAlpha = 1;
+        }
+        ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(cx, cy, 3, 0, Math.PI * 2); ctx.fill();
+      }
+      function loop(t: number) { if (visible) draw(t); else prev = t; requestAnimationFrame(loop); }
+      if (reduce) { blips.forEach((b) => (b.e = 1)); draw(performance.now() + 16); cnt.textContent = '6'; }
+      else requestAnimationFrame(loop);
+    </script>
+  </body>
+</html>
+
+<style is:global>
+  :root {
+    --bg: #0B0E1A; --bg-elevated: #11152A;
+    --bg-card: rgba(255,255,255,.04);
+    --border: rgba(255,255,255,.08); --border-strong: rgba(255,255,255,.16);
+    --text: #F5F7FB; --text-muted: rgba(245,247,251,.66); --text-dim: rgba(245,247,251,.48);
+    --accent: #4FD1C5; --accent-2: #6C8CFF; --success: #10B981;
+    --font: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif;
+    color-scheme: dark;
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+  html { scroll-behavior: smooth; scroll-padding-top: 80px; }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 400 16px/1.6 var(--font); -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+  a { color: inherit; }
+  h1, h2, h3 { margin: 0; }
+  .wrap { width: min(1160px, 100% - 32px); margin-inline: auto; }
+  .grad { background: linear-gradient(135deg, var(--accent), var(--accent-2)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .label { font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--text-dim); }
+
+  /* Arka plan */
+  .bg { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; background: radial-gradient(ellipse at top, rgba(108,140,255,.16), transparent 60%), var(--bg); }
+  .bg__glow { position: absolute; border-radius: 50%; filter: blur(90px); opacity: .55; }
+  .bg__glow--a { width: 620px; height: 620px; right: -160px; top: 120px; background: rgba(79,209,197,.22); animation: drift 18s ease-in-out infinite alternate; }
+  .bg__glow--b { width: 520px; height: 820px; left: 30%; top: -200px; background: rgba(108,140,255,.16); animation: drift 24s ease-in-out infinite alternate-reverse; }
+  .bg__glow--c { width: 420px; height: 420px; left: -160px; bottom: -120px; background: rgba(108,140,255,.2); animation: drift 20s ease-in-out infinite alternate; }
+  @keyframes drift { to { transform: translate(60px, 40px) scale(1.1); } }
+  .bg__words span {
+    position: absolute; left: var(--x); top: calc(var(--i) * 26vh + 6vh);
+    font-size: clamp(80px, 12vw, 180px); font-weight: 800; letter-spacing: -.05em; white-space: nowrap;
+    color: rgba(255,255,255,.035); will-change: transform;
+  }
+
+  /* Butonlar */
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 14px 24px; border-radius: 999px; text-decoration: none; font-weight: 600; font-size: 15px; letter-spacing: -.01em; border: 1px solid transparent; transition: transform .2s ease, background .2s ease, border-color .2s ease, box-shadow .2s ease; }
+  .btn svg { width: 17px; height: 17px; }
+  .btn:active { transform: scale(.97); }
+  .btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+  .btn--white { background: #fff; color: #0B0E1A; }
+  .btn--white:hover { box-shadow: 0 8px 30px rgba(255,255,255,.18); transform: translateY(-1px); }
+  .btn--ghost { border-color: var(--border-strong); background: rgba(255,255,255,.03); backdrop-filter: blur(12px); }
+  .btn--ghost:hover { border-color: rgba(255,255,255,.32); background: rgba(255,255,255,.07); }
+  .btn--sm { padding: 9px 16px; font-size: 14px; }
+
+  .pill { display: inline-flex; align-items: center; gap: 8px; padding: 7px 14px; border: 1px solid var(--border-strong); border-radius: 999px; background: rgba(255,255,255,.04); backdrop-filter: blur(12px); font-size: 13px; color: var(--text-muted); }
+  .pill__dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 10px var(--accent); }
+
+  /* Nav */
+  .nav { position: sticky; top: 0; z-index: 30; background: rgba(11,14,26,.72); backdrop-filter: blur(18px) saturate(1.4); border-bottom: 1px solid var(--border); }
+  .nav__in { display: flex; align-items: center; justify-content: space-between; gap: 24px; height: 64px; }
+  .brand { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; font-weight: 700; font-size: 19px; letter-spacing: -.02em; }
+  .brand__logo { width: 30px; height: 30px; }
+  .nav__links { display: flex; gap: 30px; }
+  .nav__links a { text-decoration: none; color: var(--text-muted); font-size: 14px; font-weight: 500; transition: color .15s; }
+  .nav__links a:hover { color: var(--text); }
+
+  /* Hero */
+  .hero { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr); gap: clamp(32px, 6vw, 80px); align-items: center; padding: clamp(56px, 9vw, 120px) 0 clamp(56px, 8vw, 100px); }
+  h1 { margin: 24px 0 0; font-size: clamp(44px, 6.6vw, 84px); font-weight: 700; letter-spacing: -.045em; line-height: 1.02; }
+  .sub { margin: 22px 0 0; max-width: 54ch; color: var(--text-muted); font-size: clamp(16px, 1.5vw, 19px); }
+  .cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 34px; }
+  .cta--center { justify-content: center; }
+  .checks { list-style: none; margin: 34px 0 0; padding: 0; display: grid; gap: 10px; }
+  .checks li { position: relative; padding-left: 28px; font-size: 15px; color: var(--text-muted); }
+  .checks li::before { content: ''; position: absolute; left: 0; top: 4px; width: 16px; height: 16px; background: var(--success); -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3 8.5l3 3 7-7' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/contain no-repeat; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3 8.5l3 3 7-7' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/contain no-repeat; }
+
+  .device { position: relative; perspective: 1400px; }
+  .device__top { display: flex; justify-content: space-between; align-items: center; padding: 4px 6px 14px; }
+  .live { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; color: var(--success); }
+  .live i { width: 7px; height: 7px; border-radius: 50%; background: var(--success); animation: pulse 1.6s ease-in-out infinite; }
+  @keyframes pulse { 50% { opacity: .3; } }
+  .radar { aspect-ratio: 1; border-radius: 16px; background: radial-gradient(circle, rgba(79,209,197,.08), rgba(11,14,26,.9) 70%); border: 1px solid var(--border); overflow: hidden; }
+  .radar canvas { width: 100%; height: 100%; display: block; }
+  .device__legend { display: flex; justify-content: center; gap: 22px; padding-top: 16px; font-size: 13px; color: var(--text-muted); }
+  .device__legend span { display: inline-flex; align-items: center; gap: 7px; }
+  .sw { width: 9px; height: 9px; border-radius: 50%; }
+  .sw--metal { background: #F87171; } .sw--void { background: var(--accent-2); } .sw--soil { background: var(--success); }
+  .float { position: absolute; display: grid; padding: 14px 18px; border-radius: 18px; background: rgba(17,21,42,.75); border: 1px solid var(--border-strong); backdrop-filter: blur(18px); box-shadow: 0 20px 50px rgba(0,0,0,.4); animation: bob 6s ease-in-out infinite; }
+  .float b { font-size: 28px; font-weight: 700; letter-spacing: -.03em; line-height: 1.1; margin-top: 4px; }
+  .float small { color: var(--text-muted); font-size: 12px; }
+  .float--a { left: -28px; bottom: 90px; }
+  .float--b { right: -18px; top: 70px; animation-delay: -3s; }
+  @keyframes bob { 50% { transform: translateY(-10px); } }
+
+
+  /* Hero gerçek fotoğraf */
+  .photo { position: relative; margin: 0 0 0 auto; width: 88%; border-radius: 32px; overflow: hidden; border: 1px solid var(--border-strong); box-shadow: 0 40px 120px rgba(0,0,0,.55), 0 0 0 1px rgba(255,255,255,.04); transform: rotateY(-6deg) rotateX(3deg); transition: transform .7s cubic-bezier(.2,.8,.2,1); }
+  .device:hover .photo { transform: rotateY(-2deg) rotateX(1deg); }
+  .photo img { display: block; width: 100%; height: auto; aspect-ratio: 3 / 4; object-fit: cover; object-position: 50% 70%; }
+  .photo::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(11,14,26,.55), transparent 25%, transparent 60%, rgba(11,14,26,.85)), linear-gradient(120deg, rgba(79,209,197,.12), transparent 40%); pointer-events: none; }
+  .photo figcaption { position: absolute; left: 20px; top: 18px; z-index: 1; display: inline-flex; align-items: center; gap: 8px; padding: 7px 14px; border-radius: 999px; font-size: 13px; font-weight: 600; background: rgba(11,14,26,.6); border: 1px solid var(--border-strong); backdrop-filter: blur(12px); }
+  .scan-card { position: absolute; left: -36px; bottom: -36px; width: 46%; min-width: 210px; padding: 12px; border-radius: 22px; background: rgba(17,21,42,.78); border: 1px solid var(--border-strong); backdrop-filter: blur(20px); box-shadow: 0 30px 70px rgba(0,0,0,.5); z-index: 2; }
+  .scan-card .device__top { padding: 2px 4px 10px; }
+  .scan-card .device__legend { gap: 12px; padding-top: 10px; font-size: 11px; }
+  .float--a { left: auto !important; right: -14px; bottom: 120px !important; }
+
+  /* Bento: fotoğraflı hücre */
+  .cell--photo { position: relative; }
+  .cell--photo > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: .28; transition: opacity .4s, transform .6s; z-index: 0; }
+  .cell--photo::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(11,14,26,.2), rgba(11,14,26,.92)); z-index: 0; }
+  .cell--photo > *:not(img) { position: relative; z-index: 1; }
+  .cell--photo:hover > img { opacity: .42; transform: scale(1.04); }
+
+  /* Cihaz kolajı */
+  .split { align-items: start; }
+  .collage { display: grid; grid-template-columns: 1.35fr 1fr; grid-template-rows: 1fr 1fr; gap: 14px; }
+  .collage figure { position: relative; margin: 0; border-radius: 24px; overflow: hidden; border: 1px solid var(--border); background: var(--bg-elevated); }
+  .collage img { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform .7s cubic-bezier(.2,.8,.2,1); }
+  .collage figure:hover img { transform: scale(1.05); }
+  .collage__main { grid-row: span 2; aspect-ratio: 3 / 4; }
+  .collage__side img { position: absolute; inset: 0; }
+  .model-pill { margin: 0 0 14px; }
+  .collage__side figcaption { position: absolute; left: 12px; bottom: 12px; padding: 5px 11px; border-radius: 999px; font-size: 12px; font-weight: 600; background: rgba(11,14,26,.65); backdrop-filter: blur(10px); border: 1px solid var(--border-strong); }
+  .split .note { margin-top: 16px; }
+
+  /* Galeri */
+  .gallery { display: flex; gap: 16px; overflow-x: auto; scroll-snap-type: x mandatory; padding: 4px max(16px, calc((100% - 1160px) / 2)) 20px; scrollbar-width: none; -webkit-mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent); mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent); }
+  .gallery::-webkit-scrollbar { display: none; }
+  .gallery__item { position: relative; flex: 0 0 clamp(220px, 26vw, 300px); aspect-ratio: 3 / 4; padding: 0; border: 1px solid var(--border); border-radius: 24px; overflow: hidden; background: var(--bg-elevated); cursor: zoom-in; scroll-snap-align: center; color: var(--text); font: inherit; }
+  .gallery__item img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .7s cubic-bezier(.2,.8,.2,1); }
+  .gallery__item::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 60%, rgba(11,14,26,.85)); }
+  .gallery__item span { position: absolute; left: 16px; bottom: 14px; z-index: 1; font-weight: 600; font-size: 15px; }
+  .gallery__item:hover img { transform: scale(1.06); }
+  .gallery__item:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+  .lightbox { padding: 0; border: 0; background: transparent; max-width: min(92vw, 720px); max-height: 92vh; overflow: visible; }
+  .lightbox::backdrop { background: rgba(5,7,14,.86); backdrop-filter: blur(8px); }
+  .lightbox img { display: block; max-width: 100%; max-height: 88vh; border-radius: 20px; border: 1px solid var(--border-strong); }
+  .lightbox__close { position: absolute; top: -14px; right: -14px; width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--border-strong); background: var(--bg-elevated); color: var(--text); font-size: 16px; cursor: pointer; }
+
+  /* İmleç takibi */
+  .cursor { position: fixed; inset: 0; pointer-events: none; z-index: 100; opacity: 0; transition: opacity .3s; }
+  .cursor-on .cursor { opacity: 1; }
+  .cursor__dot, .cursor__ring { position: absolute; left: 0; top: 0; border-radius: 50%; will-change: transform; }
+  .cursor__dot { width: 8px; height: 8px; margin: -4px 0 0 -4px; background: var(--accent); box-shadow: 0 0 12px var(--accent), 0 0 24px rgba(79,209,197,.5); }
+  .cursor__ring { width: 36px; height: 36px; margin: -18px 0 0 -18px; }
+  .cursor__ring::before { content: ''; position: absolute; inset: 0; border-radius: 50%; border: 1.5px solid rgba(79,209,197,.55); transition: transform .25s cubic-bezier(.2,.8,.2,1), background .25s, border-color .25s; }
+  .cursor-hover .cursor__ring::before { transform: scale(1.7); background: rgba(79,209,197,.08); border-color: rgba(108,140,255,.7); }
+  .cursor-down .cursor__ring::before { transform: scale(.8); }
+  .has-cursor .bg::after { content: ''; position: absolute; inset: 0; background: radial-gradient(520px circle at var(--gx, 50%) var(--gy, 30%), rgba(79,209,197,.09), transparent 60%); }
+
+  /* Marquee */
+  .marquee-section { padding: 40px 0; border-block: 1px solid var(--border); }
+  .marquee { display: flex; overflow: hidden; -webkit-mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent); mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent); }
+  .marquee__track { display: flex; gap: 34px; padding-right: 34px; flex-shrink: 0; animation: mq 90s linear infinite; }
+  .marquee:hover .marquee__track { animation-play-state: paused; }
+  .marquee__track span { color: var(--text-muted); font-size: 19px; font-weight: 500; letter-spacing: -.01em; white-space: nowrap; transition: color .15s; }
+  .marquee__track span:hover { color: var(--text); }
+  @keyframes mq { to { transform: translateX(-100%); } }
+
+  /* Bölüm */
+  .section { padding: clamp(72px, 10vw, 120px) 0 0; }
+  .head { text-align: center; max-width: 720px; margin: 0 auto 56px; }
+  .head h2, .split h2 { margin: 14px 0 12px; font-size: clamp(32px, 4.8vw, 54px); font-weight: 700; letter-spacing: -.035em; line-height: 1.05; }
+  .head p { margin: 0; color: var(--text-muted); font-size: 17px; }
+  .head p a { color: var(--accent); }
+  .head--left { text-align: left; margin: 0; }
+
+  /* Kart + parlama */
+  .glow { position: relative; }
+  .glow::before { content: ''; position: absolute; inset: 0; border-radius: inherit; background: radial-gradient(500px circle at var(--mx, 50%) var(--my, 50%), rgba(79,209,197,.12), transparent 50%); opacity: 0; transition: opacity .3s; pointer-events: none; }
+  .glow:hover::before { opacity: 1; }
+
+  .bento { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); grid-auto-rows: minmax(220px, auto); gap: 18px; }
+  .cell { grid-column: span 2; display: flex; flex-direction: column; padding: 28px; border-radius: 24px; background: linear-gradient(160deg, rgba(255,255,255,.04), rgba(255,255,255,.012)); border: 1px solid var(--border); backdrop-filter: blur(20px); overflow: hidden; transition: transform .25s ease, border-color .25s ease; }
+  .cell:hover { transform: translateY(-4px); border-color: rgba(255,255,255,.18); }
+  .cell--big { grid-column: span 2; grid-row: span 2; justify-content: space-between; background: radial-gradient(100% 70% at 0% 0%, rgba(79,209,197,.14), transparent 60%), linear-gradient(160deg, rgba(255,255,255,.05), rgba(255,255,255,.012)); }
+  .cell--wide { grid-column: span 2; }
+  .bignum { font-size: clamp(64px, 9vw, 120px); font-weight: 800; letter-spacing: -.05em; line-height: 1; background: linear-gradient(135deg, var(--accent), var(--accent-2)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .cell h3 { margin: auto 0 8px; padding-top: 28px; font-size: 20px; font-weight: 650; letter-spacing: -.02em; }
+  .cell--wide h3 { margin-top: 12px; padding-top: 0; }
+  .cell p { margin: 0; color: var(--text-muted); font-size: 15px; }
+  .icon { width: 44px; height: 44px; display: grid; place-items: center; border-radius: 12px; background: rgba(79,209,197,.1); border: 1px solid rgba(79,209,197,.2); color: var(--accent); }
+  .icon svg { width: 24px; height: 24px; }
+  .bars { display: flex; align-items: flex-end; gap: 5px; height: 64px; margin-top: 24px; }
+  .bars i { flex: 1; height: var(--h); border-radius: 3px; background: linear-gradient(180deg, var(--accent), rgba(108,140,255,.25)); opacity: .75; animation: eq 2.4s ease-in-out infinite; animation-delay: var(--d); transform-origin: bottom; }
+  @keyframes eq { 50% { transform: scaleY(.45); } }
+
+  .split { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(32px, 6vw, 80px); align-items: center; }
+  .note { margin: 24px 0 0; padding: 14px 18px; border-radius: 14px; background: rgba(245,196,103,.07); border: 1px solid rgba(245,196,103,.2); color: var(--text-muted); font-size: 14px; }
+  .sensors { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+  .sensors li { display: grid; grid-template-columns: 56px minmax(0, 1fr); gap: 16px; align-items: center; padding: 18px 20px; border-radius: 20px; background: var(--bg-card); border: 1px solid var(--border); transition: border-color .25s, transform .25s; }
+  .sensors li:hover { border-color: rgba(255,255,255,.18); transform: translateX(4px); }
+  .tag { display: grid; place-items: center; height: 44px; border-radius: 12px; font-size: 12px; font-weight: 800; letter-spacing: .06em; color: #0B0E1A; background: linear-gradient(135deg, var(--accent), var(--accent-2)); }
+  .sensors h3 { font-size: 16px; font-weight: 650; letter-spacing: -.01em; }
+  .sensors p { margin: 2px 0 0; color: var(--text-muted); font-size: 14px; }
+
+  .steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+  .steps li { padding: 28px; border-radius: 24px; background: var(--bg-card); border: 1px solid var(--border); }
+  .step-n { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; font-weight: 700; background: rgba(255,255,255,.06); border: 1px solid var(--border-strong); }
+  .steps li:last-child .step-n { background: linear-gradient(135deg, var(--accent), var(--accent-2)); color: #0B0E1A; border: 0; }
+  .steps h3 { margin: 22px 0 6px; font-size: 19px; font-weight: 650; letter-spacing: -.02em; }
+  .steps p { margin: 0; color: var(--text-muted); font-size: 15px; }
+
+  .faq { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: clamp(28px, 5vw, 72px); align-items: start; }
+  .faq__list { display: grid; gap: 10px; }
+  details { border-radius: 18px; background: var(--bg-card); border: 1px solid var(--border); transition: border-color .2s, background .2s; }
+  details[open] { border-color: var(--border-strong); background: rgba(255,255,255,.06); }
+  summary { list-style: none; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 20px 22px; font-weight: 600; font-size: 16px; }
+  summary::-webkit-details-marker { display: none; }
+  summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 18px; }
+  .chev { flex: none; width: 10px; height: 10px; border-right: 2px solid var(--text-muted); border-bottom: 2px solid var(--text-muted); transform: rotate(45deg) translateY(-3px); transition: transform .25s; }
+  details[open] .chev { transform: rotate(-135deg) translateY(-3px); }
+  details p { margin: 0; padding: 0 22px 20px; color: var(--text-muted); font-size: 15px; }
+
+  .final { text-align: center; padding: clamp(56px, 8vw, 96px) 24px; border-radius: 32px; border: 1px solid var(--border-strong); background: radial-gradient(80% 100% at 50% 0%, rgba(79,209,197,.18), transparent 60%), radial-gradient(60% 80% at 100% 100%, rgba(108,140,255,.16), transparent 60%), rgba(255,255,255,.02); overflow: hidden; }
+  .final h2 { margin: 20px 0 12px; font-size: clamp(36px, 6vw, 68px); font-weight: 700; letter-spacing: -.045em; line-height: 1.02; }
+  .final p { margin: 0 auto; max-width: 48ch; color: var(--text-muted); font-size: 17px; }
+
+  .footer { padding: 72px 0 100px; margin-top: clamp(72px, 10vw, 120px); border-top: 1px solid var(--border); color: var(--text-dim); font-size: 14px; }
+  .footer__top { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: 24px 64px; }
+  .footer .brand { color: var(--text); margin-bottom: 8px; }
+  .footer p { margin: 6px 0 0; }
+  .footer a { text-decoration: none; color: var(--text-muted); }
+  .footer a:hover { color: var(--text); }
+  .legal { font-size: 13px; line-height: 1.65; }
+  .copy { margin-top: 40px !important; font-size: 13px; }
+
+  .fab { position: fixed; right: 18px; bottom: 18px; z-index: 40; width: 58px; height: 58px; display: grid; place-items: center; border-radius: 50%; background: #25D366; color: #fff; box-shadow: 0 12px 34px rgba(37,211,102,.35); transition: transform .2s; }
+  .fab:hover { transform: scale(1.06); }
+  .fab svg { width: 28px; height: 28px; }
+
+  /* Beliriş */
+  .reveal { opacity: 0; transform: translateY(24px); transition: opacity .8s cubic-bezier(.2,.8,.2,1), transform .8s cubic-bezier(.2,.8,.2,1); }
+  .reveal.in { opacity: 1; transform: none; }
+  .cell.reveal.in:hover { transform: translateY(-4px); }
+
+  @media (max-width: 960px) {
+    .nav__links { display: none; }
+    .hero, .split, .faq { grid-template-columns: minmax(0, 1fr); }
+    .device { max-width: 480px; width: 100%; margin-inline: auto; margin-bottom: 36px; }
+    .float--b { right: -6px; }
+    .photo { width: 100%; transform: none; }
+    .scan-card { left: -8px; bottom: -28px; }
+    .bento { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+    .cell, .cell--big { grid-column: span 1; grid-row: auto; }
+    .cell--big, .cell--wide { grid-column: 1 / -1; }
+    .steps { grid-template-columns: minmax(0, 1fr); }
+    .footer__top { grid-template-columns: minmax(0, 1fr); }
+    .head--left { text-align: center; }
+  }
+  @media (max-width: 600px) {
+    .bento { grid-template-columns: minmax(0, 1fr); grid-auto-rows: auto; }
+    .cta .btn { flex: 1 1 100%; }
+    .nav .btn--sm { padding: 8px 12px; font-size: 13px; }
+    .float { padding: 10px 14px; } .float b { font-size: 22px; }
+    .scan-card { width: 56%; min-width: 0; }
+    .float--a { bottom: 90px !important; }
+    .collage { grid-template-columns: 1fr 1fr; grid-template-rows: auto; }
+    .collage__main { grid-column: 1 / -1; grid-row: auto; aspect-ratio: 4 / 5; }
+    .collage__side { aspect-ratio: 3 / 4; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+    html { scroll-behavior: auto; }
+    .reveal { opacity: 1; transform: none; }
+  }
+</style>

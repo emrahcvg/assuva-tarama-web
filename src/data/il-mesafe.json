@@ -1,0 +1,326 @@
+[
+ {
+  "il": "Adana",
+  "km": 939
+ },
+ {
+  "il": "Adıyaman",
+  "km": 1146
+ },
+ {
+  "il": "Afyonkarahisar",
+  "km": 455
+ },
+ {
+  "il": "Ağrı",
+  "km": 1435
+ },
+ {
+  "il": "Aksaray",
+  "km": 723
+ },
+ {
+  "il": "Amasya",
+  "km": 676
+ },
+ {
+  "il": "Ankara",
+  "km": 453
+ },
+ {
+  "il": "Antalya",
+  "km": 715
+ },
+ {
+  "il": "Ardahan",
+  "km": 1346
+ },
+ {
+  "il": "Artvin",
+  "km": 1201
+ },
+ {
+  "il": "Aydın",
+  "km": 579
+ },
+ {
+  "il": "Balıkesir",
+  "km": 390
+ },
+ {
+  "il": "Bartın",
+  "km": 418
+ },
+ {
+  "il": "Batman",
+  "km": 1424
+ },
+ {
+  "il": "Bayburt",
+  "km": 1132
+ },
+ {
+  "il": "Bilecik",
+  "km": 230
+ },
+ {
+  "il": "Bingöl",
+  "km": 1203
+ },
+ {
+  "il": "Bitlis",
+  "km": 1450
+ },
+ {
+  "il": "Bolu",
+  "km": 263
+ },
+ {
+  "il": "Burdur",
+  "km": 590
+ },
+ {
+  "il": "Bursa",
+  "km": 243
+ },
+ {
+  "il": "Çanakkale",
+  "km": 320
+ },
+ {
+  "il": "Çankırı",
+  "km": 444
+ },
+ {
+  "il": "Çorum",
+  "km": 609
+ },
+ {
+  "il": "Denizli",
+  "km": 653
+ },
+ {
+  "il": "Diyarbakır",
+  "km": 1328
+ },
+ {
+  "il": "Düzce",
+  "km": 228
+ },
+ {
+  "il": "Edirne",
+  "km": 235
+ },
+ {
+  "il": "Elazığ",
+  "km": 1128
+ },
+ {
+  "il": "Erzincan",
+  "km": 1027
+ },
+ {
+  "il": "Erzurum",
+  "km": 1218
+ },
+ {
+  "il": "Eskişehir",
+  "km": 330
+ },
+ {
+  "il": "Gaziantep",
+  "km": 1137
+ },
+ {
+  "il": "Giresun",
+  "km": 978
+ },
+ {
+  "il": "Gümüşhane",
+  "km": 1060
+ },
+ {
+  "il": "Hakkari",
+  "km": 1849
+ },
+ {
+  "il": "Hatay",
+  "km": 1131
+ },
+ {
+  "il": "Iğdır",
+  "km": 1554
+ },
+ {
+  "il": "Isparta",
+  "km": 557
+ },
+ {
+  "il": "İstanbul",
+  "km": 0
+ },
+ {
+  "il": "İzmir",
+  "km": 565
+ },
+ {
+  "il": "Kahramanmaraş",
+  "km": 1084
+ },
+ {
+  "il": "Karabük",
+  "km": 412
+ },
+ {
+  "il": "Karaman",
+  "km": 777
+ },
+ {
+  "il": "Kars",
+  "km": 1424
+ },
+ {
+  "il": "Kastamonu",
+  "km": 518
+ },
+ {
+  "il": "Kayseri",
+  "km": 772
+ },
+ {
+  "il": "Kırıkkale",
+  "km": 527
+ },
+ {
+  "il": "Kırklareli",
+  "km": 213
+ },
+ {
+  "il": "Kırşehir",
+  "km": 637
+ },
+ {
+  "il": "Kilis",
+  "km": 1196
+ },
+ {
+  "il": "Kocaeli",
+  "km": 111
+ },
+ {
+  "il": "Konya",
+  "km": 663
+ },
+ {
+  "il": "Kütahya",
+  "km": 352
+ },
+ {
+  "il": "Malatya",
+  "km": 1048
+ },
+ {
+  "il": "Manisa",
+  "km": 541
+ },
+ {
+  "il": "Mardin",
+  "km": 1426
+ },
+ {
+  "il": "Mersin",
+  "km": 941
+ },
+ {
+  "il": "Muğla",
+  "km": 762
+ },
+ {
+  "il": "Muş",
+  "km": 1384
+ },
+ {
+  "il": "Nevşehir",
+  "km": 727
+ },
+ {
+  "il": "Niğde",
+  "km": 805
+ },
+ {
+  "il": "Ordu",
+  "km": 932
+ },
+ {
+  "il": "Osmaniye",
+  "km": 1032
+ },
+ {
+  "il": "Rize",
+  "km": 1123
+ },
+ {
+  "il": "Sakarya",
+  "km": 148
+ },
+ {
+  "il": "Samsun",
+  "km": 734
+ },
+ {
+  "il": "Siirt",
+  "km": 1458
+ },
+ {
+  "il": "Sinop",
+  "km": 698
+ },
+ {
+  "il": "Sivas",
+  "km": 892
+ },
+ {
+  "il": "Şanlıurfa",
+  "km": 1271
+ },
+ {
+  "il": "Şırnak",
+  "km": 1548
+ },
+ {
+  "il": "Tekirdağ",
+  "km": 132
+ },
+ {
+  "il": "Tokat",
+  "km": 784
+ },
+ {
+  "il": "Trabzon",
+  "km": 1064
+ },
+ {
+  "il": "Tunceli",
+  "km": 1171
+ },
+ {
+  "il": "Uşak",
+  "km": 474
+ },
+ {
+  "il": "Van",
+  "km": 1601
+ },
+ {
+  "il": "Yalova",
+  "km": 192
+ },
+ {
+  "il": "Yozgat",
+  "km": 666
+ },
+ {
+  "il": "Zonguldak",
+  "km": 371
+ }
+]
