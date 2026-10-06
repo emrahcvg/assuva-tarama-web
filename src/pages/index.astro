@@ -21,9 +21,9 @@ const sensorler = [
 ];
 
 const galeri = [
-  { f: 'canta-aci', t: 'Sahada kurulum', alt: 'Proton Elic LB4S sensör çubuklarıyla taşıma çantası üzerinde, çimenlik alanda' },
-  { f: 'yan-sensor', t: 'Sensör dizisi', alt: 'Proton Elic LB4S yandan görünüm, manyetik sensör çubukları' },
-  { f: 'sensor-yakin', t: 'Sensör ve bağlantılar', alt: 'Proton Elic LB4S sensörleri, güç ünitesi ve bağlantı kablosu yakın çekim' },
+  { f: 'saha', t: 'Sahada tarama', alt: 'Temsili çizim: sensör kolu yüzeyden tarıyor, yer altında boşluk ve metal anomalisi işaretli' },
+  { f: 'sensor', t: 'Sensör modülü', alt: 'Temsili çizim: 4×16 termal matris, dört manyetik sensör, LiDAR ve Bluetooth bağlantısı' },
+  { f: 'goruntu', t: '3D görüntü', alt: 'Temsili çizim: 3D zemin haritasında kırmızı metal tepesi ve mavi boşluk çukuru' },
 ];
 const sss = [
   ['Bir tarama ne kadar sürer?', 'Alanın büyüklüğüne ve zemine göre değişir; tipik bir parsel taraması sahada 2–4 saat sürer. Kurulum ve ön değerlendirme bu süreye dahildir.'],
@@ -128,7 +128,7 @@ const phoneIcon = 'M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1
 
         <div class="device">
           <figure class="photo">
-            <img src={asset('img/lb4s/canta-aci.webp')} width="900" height="1200" alt="Proton Elic LB4S yer altı görüntüleme cihazı, sensör çubukları ve taşıma çantasıyla sahada" fetchpriority="high" />
+            <img src={asset('img/cizim/saha.svg')} width="900" height="1200" alt="Temsili çizim: yer altı tarama cihazı yüzeyden tarıyor, tarama dalgaları boşluk ve metal anomalisini işaretliyor" fetchpriority="high" />
             <figcaption><span class="pill__dot"></span>{DEVICE} · Norton</figcaption>
           </figure>
           <div class="scan-card">
@@ -190,7 +190,7 @@ const phoneIcon = 'M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1
             <p>İnşaat öncesi parsel, eski temel, kuyu ve altyapı hattı gibi gizli unsurları önceden görün.</p>
           </article>
           <article class="cell cell--wide cell--photo glow">
-            <img src={asset('img/lb4s/sensor-yakin-sm.webp')} width="384" height="512" alt="" loading="lazy" />
+            <img src={asset('img/cizim/goruntu.svg')} width="384" height="512" alt="" loading="lazy" />
             <span class="label">Rapor</span>
             <h3>3D görüntü, aynı gün rapor</h3>
             <p>Norton yazılımında 3D görüntüyü birlikte izlersiniz. Anomali noktaları koordinatları ve görüntüleriyle raporlanır.</p>
@@ -210,15 +210,15 @@ const phoneIcon = 'M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1
         <div class="split">
           <div class="collage">
             <figure class="collage__main glow">
-              <img src={asset('img/lb4s/yan-sensor.webp')} width="900" height="1200" alt="Proton Elic LB4S taşıma çantası üzerinde, yandan görünüm" loading="lazy" />
+              <img src={asset('img/cizim/sensor.svg')} width="900" height="1200" alt="Temsili çizim: termal matris, manyetik sensörler ve LiDAR'ı bir arada gösteren sensör modülü" loading="lazy" />
             </figure>
             <figure class="collage__side">
-              <img src={asset('img/lb4s/canta-aci-sm.webp')} width="384" height="512" alt="Proton Elic LB4S taşıma çantasıyla sahada kurulu" loading="lazy" />
-              <figcaption>Sahada kurulum</figcaption>
+              <img src={asset('img/cizim/saha.svg')} width="384" height="512" alt="Temsili çizim: sahada yüzeyden tarama" loading="lazy" />
+              <figcaption>Sahada tarama</figcaption>
             </figure>
             <figure class="collage__side collage__side--b">
-              <img src={asset('img/lb4s/sensor-yakin-sm.webp')} width="384" height="512" alt="Proton Elic LB4S sensörleri ve bağlantı kablosu yakın çekim" loading="lazy" />
-              <figcaption>Bluetooth + bağlantılar</figcaption>
+              <img src={asset('img/cizim/goruntu.svg')} width="384" height="512" alt="Temsili çizim: 3D görüntüde metal ve boşluk" loading="lazy" />
+              <figcaption>Bluetooth → 3D görüntü</figcaption>
             </figure>
           </div>
           <div>
@@ -239,18 +239,18 @@ const phoneIcon = 'M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1
       <section id="galeri" class="section">
         <div class="head wrap">
           <span class="label">Galeri</span>
-          <h2>Cihazı <span class="grad">yakından</span> görün.</h2>
-          <p>{DEVICE} ekipmanımız. Büyütmek için dokunun.</p>
+          <h2>Taramayı <span class="grad">adım adım</span> görün.</h2>
+          <p>Sahadan 3D görüntüye tarama süreci, temsili çizimlerle. Büyütmek için dokunun.</p>
         </div>
         <div class="gallery" id="gallery">
           {galeri.map((g) => (
-            <button class="gallery__item" type="button" data-full={asset(`img/lb4s/${g.f}.webp`)} data-alt={g.alt}>
-              <img src={asset(`img/lb4s/${g.f}-sm.webp`)} width="384" height="512" alt={g.alt} loading="lazy" />
+            <button class="gallery__item" type="button" data-full={asset(`img/cizim/${g.f}.svg`)} data-alt={g.alt}>
+              <img src={asset(`img/cizim/${g.f}.svg`)} width="384" height="512" alt={g.alt} loading="lazy" />
               <span>{g.t}</span>
             </button>
           ))}
         </div>
-        <dialog class="lightbox" id="lightbox" aria-label="Fotoğraf görüntüleyici">
+        <dialog class="lightbox" id="lightbox" aria-label="Görsel görüntüleyici">
           <img id="lbImg" src="" alt="" />
           <button class="lightbox__close" type="button" aria-label="Kapat">✕</button>
         </dialog>

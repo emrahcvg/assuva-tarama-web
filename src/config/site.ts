@@ -7,7 +7,7 @@ export const PRICING = {
 };
 
 export const CONTACT = {
-  BRAND: 'Katman',
+  BRAND: 'YASCAR MADEN A.Ş.',
   TAGLINE: 'Yer Altı Görüntüleme',
   PHONE_DISPLAY: '0532 355 38 28',
   PHONE_TEL: '+905323553828',
